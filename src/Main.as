@@ -22,6 +22,7 @@ package
 			// entry point
 			
 			trace("hallo");
+			
 		}
 		
 	}
