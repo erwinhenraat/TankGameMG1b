@@ -21,6 +21,11 @@ package
 			
 		}
 		
+		public function turnTurret(rotation:Number):void
+		{
+			tankTurretArt.rotation = rotation;
+		}
+		
 	}
 
 }
