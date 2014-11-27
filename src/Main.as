@@ -13,13 +13,11 @@ package
 	public class Main extends Sprite 
 	{
 		private var tank:Tank;
-		private var dPressed:Boolean = false;
-		private var aPressed:Boolean = false;
-		private var wPressed:Boolean = false;
-		private var sPressed:Boolean = false;
+		
+		private var bullets:Array;
 		
 		private var input:Point = new Point();
-		private var speed:Number = 0;
+		
 		
 		public function Main():void 
 		{
@@ -34,15 +32,38 @@ package
 			tank = new Tank();
 			this.addChild(tank);
 			tank.x = stage.stageWidth * 0.5;
-			tank.y = stage.stageHeight * 0.5;			
+			tank.y = stage.stageHeight * 0.5;
+			
+			
+			tank.addEventListener("ShootBullet", createBullet);
+			
+			
+			bullets = new Array();
+			
 			
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
 			this.addEventListener(Event.ENTER_FRAME, loop);
+			
+			
 		}		
-		
+		private function createBullet(e:Event):void
+		{
+			var bullet:Bullet = new Bullet(tank.x,tank.y, tank.turretRotation+tank.rotation);
+			bullets.push(bullet);
+			addChild(bullet);
+			
+			
+			//bullets.push(new Bullet());
+			//addChild(bullets[bullets.length-1]);
+		}
 		private function loop(e:Event):void 
-		{			
+		{	
+			for (var i:int = 0; i < bullets.length; i++ )
+			{
+				bullets[i].update();
+			}
+			
 			//yas gebruik je de sin
 			//xas gebruik je de cos
 			//ymove = sin(rot);
@@ -52,26 +73,16 @@ package
 			//degrees * Math.PI / 180;
 			//radians * 180 / Math.PI;
 			
-			speed = input.y * 5;
+			tank.speed = input.y * 5;
 			
 			tank.rotation += input.x * 5;
 			
+			tank.update();
 			
 			
-			var radians:Number = tank.rotation * Math.PI / 180;
-			var xMove:Number = Math.cos(radians);
-			var yMove:Number = Math.sin(radians);
-			
-			tank.x += xMove * -speed;
-			tank.y += yMove * -speed;
 			
 			
-			var diffX:Number = mouseX - tank.x;
-			var diffy:Number = mouseY - tank.y;
-			radians = Math.atan2(diffy, diffX)
-			var degrees:Number = radians * 180 / Math.PI;
-			
-			tank.turnTurret(degrees - tank.rotation);
+			//tank.turnTurret(degrees - tank.rotation);
 			
 		}
 		private function onKeyDown(e:KeyboardEvent):void

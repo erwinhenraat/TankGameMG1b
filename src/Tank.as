@@ -1,7 +1,8 @@
 package  
 {
 	import flash.display.MovieClip;
-	
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	/**
 	 * ...
 	 * @author Erwin Henraat
@@ -10,6 +11,8 @@ package
 	{
 		private var tankBodyArt:MovieClip;
 		private var tankTurretArt:TankTurretArt;
+		public var turretRotation:Number;
+		public var speed:Number = 0;
 		
 		public function Tank() 
 		{
@@ -19,13 +22,40 @@ package
 			tankTurretArt = new TankTurretArt();
 			this.addChild(tankTurretArt);		
 			
+			this.addEventListener(Event.ADDED_TO_STAGE, init);
 		}
-		
-		public function turnTurret(rotation:Number):void
+		private function init(e:Event):void
 		{
-			tankTurretArt.rotation = rotation;
+			stage.addEventListener(MouseEvent.CLICK, onClick);
 		}
 		
+		private function onClick(e:MouseEvent):void
+		{
+			trace("ik heb nu geklikt!");
+			dispatchEvent(new Event("ShootBullet"));
+			
+		}		
+		public function update():void
+		{
+			//dit is voor het rijden
+			
+			var radians:Number = this.rotation * Math.PI / 180;
+			var xMove:Number = Math.cos(radians);
+			var yMove:Number = Math.sin(radians);
+			
+			this.x += xMove * -speed;
+			this.y += yMove * -speed;
+			
+			
+			//dit is draaien van turret
+			var diffX:Number = mouseX;
+			var diffy:Number = mouseY;
+			radians = Math.atan2(diffy, diffX)
+			var degrees:Number = radians * 180 / Math.PI;
+			
+			tankTurretArt.rotation = degrees;	
+			turretRotation = degrees;
+		}
 	}
 
 }
